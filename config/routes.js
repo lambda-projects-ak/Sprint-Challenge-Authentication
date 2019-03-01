@@ -1,24 +1,20 @@
+const router = require('express').Router();
 const axios = require('axios');
 
 const { authenticate } = require('../auth/authenticate');
 
-module.exports = server => {
-  server.post('/api/register', register);
-  server.post('/api/login', login);
-  server.get('/api/jokes', authenticate, getJokes);
-};
-
-function register(req, res) {
+router.post('/register', (req, res) => {
   // implement user registration
-}
+  res.status(200).json({ success: true });
+});
 
-function login(req, res) {
-  // implement user login
-}
+router.post('/login', (req, res) => {
+  res.status(200).json({ success: true });
+});
 
 function getJokes(req, res) {
   const requestOptions = {
-    headers: { accept: 'application/json' },
+    headers: { accept: 'application/json' }
   };
 
   axios
@@ -30,3 +26,5 @@ function getJokes(req, res) {
       res.status(500).json({ message: 'Error Fetching Jokes', error: err });
     });
 }
+
+module.exports = router;
