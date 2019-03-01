@@ -87,7 +87,7 @@ router.get('/users', authenticate, (req, res) => {
 });
 
 // get jokes
-router.get('/jokes', (req, res) => {
+router.get('/jokes', authenticate, (req, res) => {
   const requestOptions = {
     headers: { accept: 'application/json' }
   };
