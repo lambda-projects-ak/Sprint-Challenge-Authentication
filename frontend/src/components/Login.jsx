@@ -18,8 +18,8 @@ export class Login extends Component {
   handleLogin = e => {
     e.preventDefault();
     axios
-      .post('/login', this.state)
-      .then(res => console.log(res))
+      .post('http://localhost:3300/api/login', this.state)
+      .then(res => localStorage.setItem('token', res.data.token))
       .catch(err => console.log(err));
 
     this.setState({
@@ -30,28 +30,32 @@ export class Login extends Component {
 
   render() {
     return (
-      <Form onSubmit={this.handleLogin}>
-        <Input
-          name="username"
-          value={this.state.username}
-          placeholder="username"
-          onChange={this.handleChange}
-        />
-        <Input
-          name="password"
-          value={this.state.password}
-          placeholder="password"
-          onChange={this.handleChange}
-        />
-        <Button size="small">Login To See Jokes</Button>
-      </Form>
+      <FormStyles>
+        <form>
+          <Input
+            name="username"
+            value={this.state.username}
+            placeholder="username"
+            onChange={this.handleChange}
+          />
+          <Input
+            name="password"
+            value={this.state.password}
+            placeholder="password"
+            onChange={this.handleChange}
+          />
+          <Button size="small" onClick={this.handleLogin}>
+            Login To See Jokes
+          </Button>
+        </form>
+      </FormStyles>
     );
   }
 }
 
 export default Login;
 
-const Form = styled.form`
+const FormStyles = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
