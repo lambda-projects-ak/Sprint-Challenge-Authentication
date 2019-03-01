@@ -2,16 +2,32 @@ const router = require('express').Router();
 const axios = require('axios');
 
 const { authenticate } = require('../auth/authenticate');
+const users = require('../database/models/user-models');
 
 // user registration
 router.post('/register', (req, res) => {
-  // implement user registration
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    res.status(400).json({
+      success: false,
+      message: 'Missing credentials, please try again.'
+    });
+  }
+
+  user.add();
+
   res.status(200).json({ success: true });
 });
 
 // user login
 router.post('/login', (req, res) => {
   res.status(200).json({ success: true });
+});
+
+// get users
+router.get('/users', (req, res) => {
+  users.get().then(users => res.status(200).json({ success: true, users }));
 });
 
 // get jokes
