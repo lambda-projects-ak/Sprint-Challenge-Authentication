@@ -1,8 +1,24 @@
 const router = require('express').Router();
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
 
 const { authenticate } = require('../auth/authenticate');
 const users = require('../database/models/user-models');
+
+const secret =
+  process.env.SECRET || 'this is a backup secret if there is no .env secret.';
+
+// generate token
+const generateToken = user => {
+  const payload = {
+    subject: user.id
+  };
+  const options = {
+    expiresIn: '30m'
+  };
+
+  return jwt.sign(payload, secret, options);
+};
 
 // user registration
 router.post('/register', (req, res) => {
@@ -20,7 +36,8 @@ router.post('/register', (req, res) => {
     .add(newUser)
     .then(user => {
       if (user) {
-        res.status(200).json({ success: true, userId: user.id });
+        const token = generateToken(user);
+        res.status(200).json({ success: true, userId: user.id, token });
       } else {
         res
           .status(500)
