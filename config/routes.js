@@ -3,16 +3,19 @@ const axios = require('axios');
 
 const { authenticate } = require('../auth/authenticate');
 
+// user registration
 router.post('/register', (req, res) => {
   // implement user registration
   res.status(200).json({ success: true });
 });
 
+// user login
 router.post('/login', (req, res) => {
   res.status(200).json({ success: true });
 });
 
-function getJokes(req, res) {
+// get jokes
+router.get('/jokes', (req, res) => {
   const requestOptions = {
     headers: { accept: 'application/json' }
   };
@@ -25,6 +28,6 @@ function getJokes(req, res) {
     .catch(err => {
       res.status(500).json({ message: 'Error Fetching Jokes', error: err });
     });
-}
+});
 
 module.exports = router;
