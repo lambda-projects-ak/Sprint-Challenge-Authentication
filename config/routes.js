@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const { authenticate } = require('../auth/authenticate');
 const users = require('../database/models/user-models');
@@ -32,6 +33,11 @@ router.post('/register', (req, res) => {
     });
   }
 
+  // hash user password here
+  const hash = bcrypt.hashSync(newUser.password, 5);
+  // assign hash pw to newUser.password
+  newUser.password = hash;
+
   users
     .add(newUser)
     .then(user => {
@@ -49,7 +55,29 @@ router.post('/register', (req, res) => {
 
 // user login
 router.post('/login', (req, res) => {
-  res.status(200).json({ success: true });
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    res.status(400).json({
+      success: false,
+      message: 'Missing credentials, please try again.'
+    });
+  }
+
+  users
+    .getBy(username)
+    .then(user => {
+      if (bcrypt.compareSync(password, user.password)) {
+        const token = generateToken(user);
+        res.status(200).json({ success: true, userId: user.id, token });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: 'Invalid credentials, please try again.'
+        });
+      }
+    })
+    .catch(err => console.log(err));
 });
 
 // get users

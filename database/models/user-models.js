@@ -3,11 +3,18 @@ const db = require('../dbConfig');
 module.exports = {
   get,
   getById,
+  getBy,
   add
 };
 
 function get() {
   return db('users');
+}
+
+function getBy(username) {
+  return db('users')
+    .where({ username })
+    .first();
 }
 
 function getById(id) {
