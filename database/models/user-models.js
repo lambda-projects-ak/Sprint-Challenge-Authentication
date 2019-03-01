@@ -19,5 +19,5 @@ function getById(id) {
 function add(user) {
   return db('users')
     .insert(user)
-    .then(id => getById({ id }));
+    .then(([id]) => getById(id));
 }

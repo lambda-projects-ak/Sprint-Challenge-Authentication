@@ -7,6 +7,7 @@ const users = require('../database/models/user-models');
 // user registration
 router.post('/register', (req, res) => {
   const { username, password } = req.body;
+  const newUser = req.body;
 
   if (!username || !password) {
     res.status(400).json({
@@ -15,9 +16,18 @@ router.post('/register', (req, res) => {
     });
   }
 
-  user.add();
-
-  res.status(200).json({ success: true });
+  users
+    .add(newUser)
+    .then(user => {
+      if (user) {
+        res.status(200).json({ success: true, userId: user.id });
+      } else {
+        res
+          .status(500)
+          .json({ success: false, message: 'Failed to register user.' });
+      }
+    })
+    .catch(err => console.log(err));
 });
 
 // user login
